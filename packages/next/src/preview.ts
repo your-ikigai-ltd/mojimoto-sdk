@@ -19,14 +19,33 @@ export interface PreviewHandlerOptions {
 }
 
 /**
- * Resolve a redirect target to a safe, same-origin relative path. Anything
- * absolute (`https://…`), protocol-relative (`//evil.com`), or otherwise
- * suspicious falls back to `defaultRedirect` — this prevents the preview routes
- * from being abused as an open redirect.
+ * Resolve a redirect target to a safe, same-origin relative path, preventing
+ * the preview routes from being abused as an open redirect.
+ *
+ * The candidate is resolved against a synthetic base with the URL parser, and
+ * we only accept it if its origin is unchanged. We then redirect to the
+ * *re-serialized* path — never the raw input — so backslash tricks
+ * (`/\evil.com`), protocol-relative URLs (`//evil.com`), absolute URLs, and
+ * embedded control characters can't survive via a parser/validator differential.
  */
-function safeRedirect(target: string | null, defaultRedirect: string): string {
-  const candidate = target ?? defaultRedirect;
-  return candidate.startsWith('/') && !candidate.startsWith('//') ? candidate : '/';
+export function safeRedirect(target: string | null, defaultRedirect: string): string {
+  const base = 'https://mojimoto.invalid';
+
+  for (const candidate of [target, defaultRedirect, '/']) {
+    if (candidate == null) {
+      continue;
+    }
+    try {
+      const resolved = new URL(candidate, base);
+      if (resolved.origin === base) {
+        return resolved.pathname + resolved.search + resolved.hash;
+      }
+    } catch {
+      // Fall through to the next candidate.
+    }
+  }
+
+  return '/';
 }
 
 export function createPreviewHandler(options: PreviewHandlerOptions) {
