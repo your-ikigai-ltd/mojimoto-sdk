@@ -16,6 +16,7 @@ Pull content from the Mojimoto delivery API with full TypeScript types, and rend
 | [`@mojimoto/vue`](./packages/vue) | Vue 3 components & composables. | `npm i @mojimoto/vue` |
 | [`@mojimoto/nuxt`](./packages/nuxt) | Nuxt 3 module: auto-config, SSR composables, global components. | `npm i @mojimoto/nuxt` |
 | [`@mojimoto/next`](./packages/next) | Next.js App Router helpers: cache-aware client + Draft Mode. | `npm i @mojimoto/next` |
+| [`@mojimoto/cli`](./packages/cli) | CLI to download generated TypeScript types for your project. | `npx @mojimoto/cli types` |
 
 You only need the packages for your stack — they layer cleanly:
 
@@ -160,22 +161,43 @@ full node reference and customization model.
 
 ## TypeScript types per project
 
-For end-to-end autocomplete against *your* content model, generate a typed declaration file
-from the CMS and pass the types into the client:
-
-```bash
-php artisan mojimoto:generate-types   # run in your Mojimoto project → mojimoto.generated.ts
-```
+Every method is generic, so you can type a document's `data` with your own interface — this
+always works, no tooling required:
 
 ```ts
 import { createClient, type MojimotoDocument } from '@mojimoto/client';
-import type { MarketingPageData } from './mojimoto.generated';
 
+interface MarketingPageData {
+  headline: string;
+  body: import('@mojimoto/client').MojiRichText;
+}
 type MarketingPage = MojimotoDocument<'marketing_page', MarketingPageData>;
 
 const home = await cms.byUid<MarketingPage>('marketing_page', 'home');
 home?.data.headline; // ✅ typed
 ```
+
+For **end-to-end autocomplete generated from your live content model**, download a typed
+declaration file from the delivery API with [`@mojimoto/cli`](./packages/cli):
+
+```bash
+npx @mojimoto/cli types \
+  --endpoint https://cms.yourikigai.co.uk/api/v1 \
+  --project decentenergy \
+  --token "$MOJIMOTO_TOKEN"        # → writes mojimoto.generated.ts
+```
+
+```ts
+import type { MarketingPageData } from './mojimoto.generated';
+
+const home = await cms.byUid<MojimotoDocument<'marketing_page', MarketingPageData>>(
+  'marketing_page',
+  'home',
+);
+```
+
+> The CLI fetches types over the hosted API — no access to the CMS source code is needed.
+> Commit the generated file, or regenerate it in CI; it only changes when your model changes.
 
 ---
 

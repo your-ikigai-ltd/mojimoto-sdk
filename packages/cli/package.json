@@ -1,0 +1,28 @@
+{
+  "name": "@mojimoto/cli",
+  "version": "0.1.0",
+  "description": "Command-line tool for the Mojimoto headless CMS — download generated TypeScript types for your project.",
+  "author": "Your Ikigai Ltd",
+  "license": "MIT",
+  "type": "module",
+  "keywords": ["mojimoto", "headless-cms", "cli", "codegen", "typescript"],
+  "bin": {
+    "mojimoto": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

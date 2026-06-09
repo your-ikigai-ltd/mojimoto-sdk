@@ -59,11 +59,13 @@ const posts = await cms.query({ type: 'blog_post', lang: 'fr-fr', signal: contro
 
 ## Typed documents
 
-Pair with the per-project types from `php artisan mojimoto:generate-types`:
+Every method is generic over the document type and its `data` shape. Define an interface
+yourself, or download generated types for your live content model with
+[`@mojimoto/cli`](../cli) (`npx @mojimoto/cli types`):
 
 ```ts
 import type { MojimotoDocument } from '@mojimoto/client';
-import type { BlogPostData } from './mojimoto.generated';
+import type { BlogPostData } from './mojimoto.generated'; // from `npx @mojimoto/cli types`
 
 type BlogPost = MojimotoDocument<'blog_post', BlogPostData>;
 
