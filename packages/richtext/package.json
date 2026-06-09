@@ -1,0 +1,30 @@
+{
+  "name": "@mojimoto/richtext",
+  "version": "0.1.0",
+  "description": "Framework-agnostic core for rendering Mojimoto rich-text fields: types, a serializer engine, and asText/asHTML helpers.",
+  "author": "Your Ikigai Ltd",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "keywords": ["mojimoto", "headless-cms", "rich-text", "structured-text"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

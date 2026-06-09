@@ -1,0 +1,42 @@
+{
+  "name": "@mojimoto/vue",
+  "version": "0.1.0",
+  "description": "Vue 3 components and composables for rendering Mojimoto CMS content (rich text, images, links).",
+  "author": "Your Ikigai Ltd",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "keywords": ["mojimoto", "headless-cms", "vue", "rich-text", "nuxt"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mojimoto/client": "workspace:^",
+    "@mojimoto/richtext": "workspace:^"
+  },
+  "peerDependencies": {
+    "vue": "^3.3.0"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^2.4.6",
+    "happy-dom": "^15.11.7",
+    "vue": "^3.5.13"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

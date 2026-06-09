@@ -1,0 +1,41 @@
+{
+  "name": "@mojimoto/next",
+  "version": "0.1.0",
+  "description": "Next.js App Router helpers for Mojimoto: cache-aware client and Draft Mode preview.",
+  "author": "Your Ikigai Ltd",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "keywords": ["mojimoto", "headless-cms", "next", "app-router", "rsc"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./preview": {
+      "types": "./dist/preview.d.ts",
+      "import": "./dist/preview.js",
+      "require": "./dist/preview.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mojimoto/client": "workspace:^"
+  },
+  "peerDependencies": {
+    "next": ">=14",
+    "react": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "@mojimoto/react",
+  "version": "0.1.0",
+  "description": "React components and hooks for rendering Mojimoto CMS content (rich text, images, links).",
+  "author": "Your Ikigai Ltd",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "keywords": ["mojimoto", "headless-cms", "react", "rich-text", "next"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mojimoto/client": "workspace:^",
+    "@mojimoto/richtext": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.1.0",
+    "@types/react": "^19.0.1",
+    "happy-dom": "^15.11.7",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

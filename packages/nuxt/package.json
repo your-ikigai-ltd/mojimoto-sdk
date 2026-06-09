@@ -1,0 +1,35 @@
+{
+  "name": "@mojimoto/nuxt",
+  "version": "0.1.0",
+  "description": "Nuxt 3 module for Mojimoto: auto-configured client, SSR composables, and global components.",
+  "author": "Your Ikigai Ltd",
+  "license": "MIT",
+  "type": "module",
+  "keywords": ["mojimoto", "headless-cms", "nuxt", "nuxt-module", "vue"],
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/module.mjs"
+    }
+  },
+  "main": "./dist/module.mjs",
+  "types": "./dist/types.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "nuxt-module-build build",
+    "dev": "nuxt-module-build build --stub",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mojimoto/client": "workspace:^",
+    "@mojimoto/vue": "workspace:^",
+    "@nuxt/kit": "^3.14.0"
+  },
+  "devDependencies": {
+    "@nuxt/module-builder": "^0.8.4",
+    "@nuxt/schema": "^3.14.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
