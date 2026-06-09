@@ -221,13 +221,38 @@ pnpm typecheck    # type-check every package
 pnpm dev          # watch-build all packages
 ```
 
-This is a pnpm workspace. Releases are managed with [Changesets](https://github.com/changesets/changesets):
+This is a pnpm workspace.
 
-```bash
-pnpm changeset            # describe your change
-pnpm version-packages     # bump versions + changelogs
-pnpm release              # build + publish to npm
-```
+## Releasing
+
+Publishing is handled by CI ([Changesets](https://github.com/changesets/changesets) +
+`.github/workflows/release.yml`). **You never run `pnpm publish` / `pnpm release` locally** —
+the GitHub Action is the only publisher (it holds the `NPM_TOKEN`).
+
+The flow:
+
+1. **Describe your change.** In your feature branch / PR, run:
+   ```bash
+   pnpm changeset
+   ```
+   Pick the affected packages and a bump (patch / minor / major), and write a one-line summary.
+   This adds a markdown file under `.changeset/`. Commit it with your change.
+
+2. **Merge to `main`.** The release workflow sees the changeset and opens (or updates) a
+   **"Version Packages"** PR that bumps versions and writes `CHANGELOG.md` entries.
+
+3. **Merge the Version Packages PR.** That triggers the workflow again — now with no pending
+   changesets — so it runs `changeset publish`, releasing the bumped packages to npm (with
+   [provenance](https://docs.npmjs.com/generating-provenance-statements)) and pushing git tags.
+
+So day to day you only ever run `pnpm changeset`. Versioning and publishing happen in CI.
+
+### One-time setup (already configured)
+
+- **`NPM_TOKEN`** repo secret — an npm **Automation** token with publish rights to the
+  `@mojimoto` scope.
+- **Actions permissions** — *Read and write* + *Allow GitHub Actions to create and approve pull
+  requests* (so the workflow can open the Version Packages PR and push tags).
 
 ## License
 
