@@ -74,6 +74,40 @@ describe('createClient', () => {
     expect(fetch).toHaveBeenCalledTimes(2);
   });
 
+  it('passes a sort param through to the list URL', async () => {
+    const fetch = vi.fn().mockResolvedValue(jsonResponse(page([], 1, 1)));
+    const cms = createClient({ ...base, fetch });
+    await cms.query({ type: 'page', sort: '-updated_at' });
+    expect(fetch.mock.calls[0]![0]).toContain('sort=-updated_at');
+  });
+
+  it('retries retryable statuses then succeeds', async () => {
+    const fetch = vi
+      .fn()
+      .mockResolvedValueOnce(jsonResponse({ message: 'rate limited' }, 429))
+      .mockResolvedValueOnce(jsonResponse({ message: 'boom' }, 503))
+      .mockResolvedValueOnce(jsonResponse(page([{ id: 1 }], 1, 1)));
+    const cms = createClient({ ...base, fetch, retry: { attempts: 3, backoffMs: 1 } });
+
+    const res = await cms.query();
+    expect(res.results).toHaveLength(1);
+    expect(fetch).toHaveBeenCalledTimes(3);
+  });
+
+  it('does not retry a 4xx (other than 429)', async () => {
+    const fetch = vi.fn().mockResolvedValue(jsonResponse({ message: 'bad' }, 400));
+    const cms = createClient({ ...base, fetch, retry: 5 });
+    await expect(cms.query()).rejects.toMatchObject({ status: 400 });
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('gives up after the configured attempts and throws the last error', async () => {
+    const fetch = vi.fn().mockImplementation(() => Promise.resolve(jsonResponse({ message: 'down' }, 500)));
+    const cms = createClient({ ...base, fetch, retry: { attempts: 2, backoffMs: 1 } });
+    await expect(cms.query()).rejects.toMatchObject({ status: 500 });
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
   it('throws MojimotoError with redacted url on non-2xx', async () => {
     const fetch = vi.fn().mockImplementation(() => Promise.resolve(jsonResponse({ message: 'nope' }, 403)));
     const cms = createClient({ ...base, fetch });

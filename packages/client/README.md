@@ -30,6 +30,12 @@ const cms = createClient({
 | `preview` | `boolean` | Request drafts (`?ref=preview`) by default. |
 | `fetch` | `typeof fetch` | Custom fetch (e.g. for Node < 18 or instrumentation). |
 | `headers` | `Record<string,string>` | Extra headers merged into every request. |
+| `retry` | `number \| RetryOptions` | Retry transient failures (429/5xx, network) with exponential backoff. Off by default. |
+
+```ts
+// Retry up to 4 times with backoff (honours Retry-After and AbortSignal).
+const cms = createClient({ ...opts, retry: { attempts: 4, backoffMs: 300 } });
+```
 
 ## Methods
 
@@ -55,6 +61,30 @@ Every method accepts per-call `lang`, `preview`, and an `AbortSignal`:
 ```ts
 const controller = new AbortController();
 const posts = await cms.query({ type: 'blog_post', lang: 'fr-fr', signal: controller.signal });
+```
+
+List queries also accept `sort` — a document column (`id`, `uid`, `created_at`, `updated_at`),
+prefixed with `-` for descending:
+
+```ts
+const newest = await cms.query({ type: 'blog_post', sort: '-updated_at' });
+```
+
+## Verifying webhooks
+
+Mojimoto signs each webhook POST with `X-Mojimoto-Signature`. Verify it before trusting the body:
+
+```ts
+import { verifyWebhookSignature, type MojimotoWebhookPayload } from '@mojimoto/client';
+
+const ok = await verifyWebhookSignature({
+  body: await req.text(), // the raw body, unparsed
+  signature: req.headers.get('x-mojimoto-signature'),
+  secret: process.env.MOJIMOTO_WEBHOOK_SECRET!,
+});
+if (!ok) return new Response('bad signature', { status: 401 });
+
+const payload: MojimotoWebhookPayload = JSON.parse(bodyText);
 ```
 
 ## Typed documents

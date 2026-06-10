@@ -58,6 +58,21 @@ export interface MojimotoClientOptions {
   fetch?: typeof fetch;
   /** Extra headers merged into every request. */
   headers?: Record<string, string>;
+  /**
+   * Retry transient failures (HTTP 429 and 5xx, plus network errors) with
+   * exponential backoff. Pass a number to set the max attempts, or an object
+   * for finer control. Defaults to no retries.
+   */
+  retry?: number | RetryOptions;
+}
+
+export interface RetryOptions {
+  /** Maximum attempts, including the first. Default 3. */
+  attempts?: number;
+  /** Base backoff in ms; doubles each attempt. Default 300. */
+  backoffMs?: number;
+  /** Cap on a single backoff wait in ms. Default 5000. */
+  maxBackoffMs?: number;
 }
 
 /** Options accepted by `query`. */
@@ -74,6 +89,11 @@ export interface QueryOptions {
   perPage?: number;
   /** Request drafts for this call. */
   preview?: boolean;
+  /**
+   * Sort by a document column: `id`, `uid`, `created_at`, or `updated_at`.
+   * Prefix with `-` for descending, e.g. `-updated_at`. Defaults to `id`.
+   */
+  sort?: string;
   /** Abort the request. */
   signal?: AbortSignal;
 }

@@ -55,6 +55,29 @@ export function createClient(options: MojimotoClientOptions): MojimotoClient {
 
   const base = options.endpoint.replace(/\/+$/, '');
 
+  const retry =
+    typeof options.retry === 'number' ? { attempts: options.retry } : (options.retry ?? {});
+  const maxAttempts = Math.max(1, retry.attempts ?? (options.retry ? 3 : 1));
+  const baseBackoff = retry.backoffMs ?? 300;
+  const maxBackoff = retry.maxBackoffMs ?? 5000;
+
+  const sleep = (ms: number, signal?: AbortSignal) =>
+    new Promise<void>((resolve, reject) => {
+      if (signal?.aborted) return reject(signal.reason ?? new Error('Aborted'));
+      const t = setTimeout(resolve, ms);
+      signal?.addEventListener(
+        'abort',
+        () => {
+          clearTimeout(t);
+          reject(signal.reason ?? new Error('Aborted'));
+        },
+        { once: true },
+      );
+    });
+
+  // 429 and 5xx are transient; 4xx (except 429) are the caller's fault.
+  const isRetryableStatus = (status: number) => status === 429 || status >= 500;
+
   function buildUrl(path: string, query: Record<string, string | number | boolean | undefined>): string {
     const url = new URL(`${base}/${options.project}/${path}`);
     for (const [key, value] of Object.entries(query)) {
@@ -66,16 +89,31 @@ export function createClient(options: MojimotoClientOptions): MojimotoClient {
   }
 
   async function request<R>(url: string, signal?: AbortSignal): Promise<R> {
-    const res = await doFetch(url, {
-      headers: {
-        Authorization: `Bearer ${options.token}`,
-        Accept: 'application/json',
-        ...options.headers,
-      },
-      signal,
-    });
+    let lastError: unknown;
 
-    if (!res.ok) {
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      let res: Response;
+      try {
+        res = await doFetch(url, {
+          headers: {
+            Authorization: `Bearer ${options.token}`,
+            Accept: 'application/json',
+            ...options.headers,
+          },
+          signal,
+        });
+      } catch (err) {
+        // Network-level failure. Retry unless aborted or out of attempts.
+        if (signal?.aborted || attempt >= maxAttempts) throw err;
+        lastError = err;
+        await backoffWait(attempt, undefined, signal);
+        continue;
+      }
+
+      if (res.ok) {
+        return (await res.json()) as R;
+      }
+
       const text = await res.text();
       let body: unknown = text;
       try {
@@ -84,10 +122,36 @@ export function createClient(options: MojimotoClientOptions): MojimotoClient {
         /* keep raw text */
       }
       const redacted = url.replace(encodeURIComponent(options.token), '***');
-      throw new MojimotoError(`Mojimoto request failed (${res.status})`, res.status, redacted, body);
+      const error = new MojimotoError(
+        `Mojimoto request failed (${res.status})`,
+        res.status,
+        redacted,
+        body,
+      );
+
+      if (attempt < maxAttempts && isRetryableStatus(res.status)) {
+        lastError = error;
+        const retryAfter = parseRetryAfter(res.headers.get('retry-after'));
+        await backoffWait(attempt, retryAfter, signal);
+        continue;
+      }
+
+      throw error;
     }
 
-    return (await res.json()) as R;
+    // Unreachable in practice; the loop either returns or throws.
+    throw lastError ?? new Error('[mojimoto] request failed');
+  }
+
+  function parseRetryAfter(header: string | null): number | undefined {
+    if (!header) return undefined;
+    const seconds = Number(header);
+    return Number.isFinite(seconds) ? seconds * 1000 : undefined;
+  }
+
+  function backoffWait(attempt: number, explicitMs: number | undefined, signal?: AbortSignal) {
+    const backoff = Math.min(baseBackoff * 2 ** (attempt - 1), maxBackoff);
+    return sleep(explicitMs ?? backoff, signal);
   }
 
   function listUrl(opts: QueryOptions): string {
@@ -97,6 +161,7 @@ export function createClient(options: MojimotoClientOptions): MojimotoClient {
       lang: opts.lang ?? options.lang,
       page: opts.page,
       per_page: opts.perPage,
+      sort: opts.sort,
       ref: (opts.preview ?? options.preview) ? 'preview' : undefined,
     });
   }

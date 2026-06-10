@@ -83,6 +83,10 @@ asHTML(doc, {
 
 > When overriding nodes that interpolate untrusted text, escape it yourself with the exported
 > `escapeHTML(value)`.
+>
+> The built-in `embed` node emits the provider's oEmbed `html` **verbatim** (it must, to render
+> iframes/scripts). This assumes oEmbed HTML comes from a trusted provider configured in your CMS.
+> If embeds can carry untrusted markup, override the `embed` component to sanitize it.
 
 ## `serialize` — build your own renderer
 

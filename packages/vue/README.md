@@ -95,6 +95,13 @@ const { data: home } = useMojiDocument('marketing_page', 'home');
 > [`@mojimoto/nuxt`](../nuxt), which wrap `useAsyncData` so data is fetched on the server and
 > hydrated on the client.
 
+## Embed safety
+
+The default `embed` renderer injects provider oEmbed HTML via `v-html`. That HTML originates from
+your CMS's oEmbed provider (editor-controlled, same trust model as Prismic/Contentful renderers).
+If you embed untrusted third-party content, override the `embed` component to sanitize it or render
+an iframe yourself.
+
 ## License
 
 MIT © Your Ikigai Ltd
