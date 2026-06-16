@@ -8,7 +8,7 @@ You don't need to install it — run it on demand with `npx`:
 
 ```bash
 npx @mojimoto/cli types \
-  --endpoint https://cms.yourikigai.co.uk/api/v1 \
+  --endpoint https://mojimoto.com/api/v1 \
   --project decentenergy \
   --token "$MOJIMOTO_TOKEN"
 ```

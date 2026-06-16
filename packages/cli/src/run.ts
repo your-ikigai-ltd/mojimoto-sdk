@@ -19,7 +19,7 @@ Options:
 
 Examples:
   MOJIMOTO_TOKEN=… mojimoto types \\
-    --endpoint https://cms.yourikigai.co.uk/api/v1 --project decentenergy
+    --endpoint https://mojimoto.com/api/v1 --project decentenergy
 
   # With MOJIMOTO_ENDPOINT / MOJIMOTO_PROJECT / MOJIMOTO_TOKEN in your env:
   mojimoto types -o types/mojimoto.ts

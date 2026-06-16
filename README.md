@@ -1,6 +1,6 @@
 # Mojimoto SDK
 
-Official client SDK and framework component libraries for the **[Mojimoto](https://yourikigai.co.uk)** headless CMS — built and maintained by **Your Ikigai Ltd**.
+Official client SDK and framework component libraries for the **[Mojimoto](https://mojimoto.com)** headless CMS — built and maintained by **Your Ikigai Ltd**.
 
 Pull content from the Mojimoto delivery API with full TypeScript types, and render rich text, images, and links in **React / Next.js** and **Vue / Nuxt** with a single import.
 
@@ -50,7 +50,7 @@ From your Mojimoto project, go to **Settings → API tokens** and create a **rea
 import { createClient } from '@mojimoto/client';
 
 const cms = createClient({
-  endpoint: 'https://cms.yourikigai.co.uk/api/v1',
+  endpoint: 'https://mojimoto.com/api/v1',
   project: 'decentenergy',
   token: process.env.MOJIMOTO_TOKEN!,
 });
@@ -182,7 +182,7 @@ declaration file from the delivery API with [`@mojimoto/cli`](./packages/cli):
 
 ```bash
 npx @mojimoto/cli types \
-  --endpoint https://cms.yourikigai.co.uk/api/v1 \
+  --endpoint https://mojimoto.com/api/v1 \
   --project decentenergy \
   --token "$MOJIMOTO_TOKEN"        # → writes mojimoto.generated.ts
 ```

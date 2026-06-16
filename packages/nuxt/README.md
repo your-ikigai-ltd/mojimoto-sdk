@@ -14,7 +14,7 @@ npm i @mojimoto/nuxt
 export default defineNuxtConfig({
   modules: ['@mojimoto/nuxt'],
   mojimoto: {
-    endpoint: 'https://cms.yourikigai.co.uk/api/v1',
+    endpoint: 'https://mojimoto.com/api/v1',
     project: 'decentenergy',
     // token: '…'  // prefer the MOJIMOTO_TOKEN env var (see below)
   },
@@ -24,7 +24,7 @@ export default defineNuxtConfig({
 Configure via env vars (recommended) instead of hardcoding:
 
 ```bash
-MOJIMOTO_ENDPOINT="https://cms.yourikigai.co.uk/api/v1"
+MOJIMOTO_ENDPOINT="https://mojimoto.com/api/v1"
 MOJIMOTO_PROJECT="decentenergy"
 MOJIMOTO_TOKEN="your-read-token"
 ```

@@ -13,7 +13,7 @@ npm i @mojimoto/client
 import { createClient } from '@mojimoto/client';
 
 const cms = createClient({
-  endpoint: 'https://cms.yourikigai.co.uk/api/v1', // your delivery endpoint
+  endpoint: 'https://mojimoto.com/api/v1', // your delivery endpoint
   project: 'decentenergy',                          // project slug
   token: process.env.MOJIMOTO_TOKEN!,               // read token
 });

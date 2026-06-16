@@ -14,7 +14,7 @@ import type {
  * import { createClient } from '@mojimoto/client';
  *
  * const cms = createClient({
- *   endpoint: 'https://cms.yourikigai.co.uk/api/v1',
+ *   endpoint: 'https://mojimoto.com/api/v1',
  *   project: 'decentenergy',
  *   token: process.env.MOJIMOTO_TOKEN!,
  * });
