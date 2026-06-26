@@ -1,12 +1,18 @@
 {
   "name": "@mojimoto/next",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Next.js App Router helpers for Mojimoto: cache-aware client and Draft Mode preview.",
   "author": "Your Ikigai Ltd",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
-  "keywords": ["mojimoto", "headless-cms", "next", "app-router", "rsc"],
+  "keywords": [
+    "mojimoto",
+    "headless-cms",
+    "next",
+    "app-router",
+    "rsc"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -22,7 +28,9 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

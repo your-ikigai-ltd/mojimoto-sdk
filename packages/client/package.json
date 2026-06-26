@@ -1,12 +1,17 @@
 {
   "name": "@mojimoto/client",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Typed client for the Mojimoto content delivery API.",
   "author": "Your Ikigai Ltd",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
-  "keywords": ["mojimoto", "headless-cms", "sdk", "client"],
+  "keywords": [
+    "mojimoto",
+    "headless-cms",
+    "sdk",
+    "client"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -17,7 +22,9 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
