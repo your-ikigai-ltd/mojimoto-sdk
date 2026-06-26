@@ -38,12 +38,28 @@ importers:
       '@mojimoto/client':
         specifier: workspace:^
         version: link:../client
+      '@mojimoto/react':
+        specifier: workspace:^
+        version: link:../react
       next:
         specifier: '>=14'
         version: 16.2.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+    devDependencies:
+      '@testing-library/react':
+        specifier: ^16.1.0
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@types/react':
+        specifier: ^19.0.1
+        version: 19.2.17
+      happy-dom:
+        specifier: ^15.11.7
+        version: 15.11.7
       react:
-        specifier: '>=18'
+        specifier: ^19.0.0
         version: 19.2.7
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.7(react@19.2.7)
 
   packages/nuxt:
     dependencies:

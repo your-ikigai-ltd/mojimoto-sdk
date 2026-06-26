@@ -15,6 +15,7 @@ function io(overrides: Parameters<typeof run>[1] = {}) {
       write: async (path: string, contents: string) => {
         writes.push({ path, contents });
       },
+      exists: () => false,
       env: {},
       cwd: '/work',
       ...overrides,
@@ -85,5 +86,46 @@ describe('cli run', () => {
     const code = await run(['types', '--endpoint', 'https://cms.test/api/v1', '--project', 'demo', '--token', 'bad'], opts);
     expect(code).toBe(1);
     expect(errors[0]).toContain('403');
+  });
+
+  describe('add-preview', () => {
+    it('scaffolds the preview page and a components stub', async () => {
+      const { logs, writes, opts } = io();
+
+      expect(await run(['add-preview'], opts)).toBe(0);
+
+      const page = writes.find((w) => w.path === '/work/app/preview/[type]/[uid]/page.tsx');
+      const sections = writes.find((w) => w.path === '/work/cms/sections.tsx');
+
+      expect(page?.contents).toContain("from '@mojimoto/next/preview'");
+      expect(page?.contents).toContain("import { cms } from '@/lib/cms'");
+      expect(page?.contents).toContain("import { components } from '@/cms/sections'");
+      expect(sections?.contents).toContain('export const components: SliceComponents');
+      expect(logs.join('\n')).toContain('Next steps:');
+    });
+
+    it('honours custom import paths and app dir', async () => {
+      const { writes, opts } = io();
+
+      await run(
+        ['add-preview', '--app-dir', 'src/app', '--client-import', '~/cms', '--components-import', '~/sections'],
+        opts,
+      );
+
+      const page = writes.find((w) => w.path === '/work/src/app/preview/[type]/[uid]/page.tsx');
+      expect(page?.contents).toContain("import { cms } from '~/cms'");
+      expect(page?.contents).toContain("import { components } from '~/sections'");
+    });
+
+    it('skips existing files unless --force is passed', async () => {
+      const existing = io({ exists: () => true });
+      expect(await run(['add-preview'], existing.opts)).toBe(0);
+      expect(existing.writes).toHaveLength(0);
+      expect(existing.logs.join('\n')).toContain('Skipped');
+
+      const forced = io({ exists: () => true });
+      await run(['add-preview', '--force'], forced.opts);
+      expect(forced.writes).toHaveLength(2);
+    });
   });
 });
