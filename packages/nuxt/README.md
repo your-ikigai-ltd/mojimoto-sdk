@@ -51,7 +51,9 @@ and hydrated on the client.
 
 ```vue
 <script setup lang="ts">
-const { data: home } = await useMojiDocument('marketing_page', 'home');
+// depth controls how many levels of linked entries are inlined (1–3, default 1).
+// A page composed of section entries wants depth 2 so sections' own references resolve.
+const { data: home } = await useMojiDocument('page', 'home', { depth: 2 });
 const { data: posts } = await useMojiQuery({ type: 'blog_post', perPage: 12 });
 
 // Raw client for imperative use:

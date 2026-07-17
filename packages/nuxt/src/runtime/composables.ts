@@ -34,12 +34,14 @@ export function useMojiQuery<T extends MojimotoDocument = MojimotoDocument>(
  *
  * ```ts
  * const { data: page } = await useMojiDocument('marketing_page', 'home');
+ * // Inline sections and their own references:
+ * const { data: home } = await useMojiDocument('page', 'home', { depth: 2 });
  * ```
  */
 export function useMojiDocument<T extends MojimotoDocument = MojimotoDocument>(
   type: string,
   uid: string,
-  opts: Pick<QueryOptions, 'lang' | 'preview'> = {},
+  opts: Pick<QueryOptions, 'lang' | 'preview' | 'depth'> = {},
   key?: string,
 ) {
   const cms = useMojimoto();

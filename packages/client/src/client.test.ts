@@ -74,6 +74,21 @@ describe('createClient', () => {
     expect(fetch).toHaveBeenCalledTimes(2);
   });
 
+  it('passes depth through on list, byUid and byId URLs', async () => {
+    const fetch = vi.fn().mockImplementation(async () => jsonResponse(page([], 1, 1)));
+    const cms = createClient({ ...base, fetch });
+
+    await cms.query({ type: 'page', depth: 2 });
+    expect(fetch.mock.calls[0]![0]).toContain('depth=2');
+
+    await cms.byUid('page', 'home', { depth: 3 });
+    expect(fetch.mock.calls[1]![0]).toContain('depth=3');
+
+    fetch.mockImplementation(async () => jsonResponse({ id: 1 }));
+    await cms.byId(1, { depth: 2 });
+    expect(fetch.mock.calls[2]![0]).toBe('https://cms.test/api/v1/demo/documents/1?depth=2');
+  });
+
   it('passes a sort param through to the list URL', async () => {
     const fetch = vi.fn().mockResolvedValue(jsonResponse(page([], 1, 1)));
     const cms = createClient({ ...base, fetch });

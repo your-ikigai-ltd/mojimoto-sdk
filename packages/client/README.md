@@ -70,6 +70,19 @@ prefixed with `-` for descending:
 const newest = await cms.query({ type: 'blog_post', sort: '-updated_at' });
 ```
 
+### Reference depth
+
+Every method accepts `depth: 1 | 2 | 3` (default `1`) — how many levels of linked entries
+(`reference`/`references` fields) the API inlines. Mojimoto pages are typically composed as a
+`references` field of section entries, so fetch a page with `depth: 2` when sections have
+references of their own:
+
+```ts
+const home = await cms.byUid('page', 'home', { depth: 2 });
+// home.data.sections → full section documents, in order.
+// Beyond the depth budget a link collapses to { id, type, uid }.
+```
+
 ## Verifying webhooks
 
 Mojimoto signs each webhook POST with `X-Mojimoto-Signature`. Verify it before trusting the body:
@@ -103,10 +116,17 @@ const post = await cms.byUid<BlogPost>('blog_post', 'why-switch');
 post?.data.title; // ✅ fully typed, including resolved references
 ```
 
+If `npx @mojimoto/cli` is unavailable, the same file is plain HTTP:
+
+```bash
+curl -H "Authorization: Bearer $MOJIMOTO_TOKEN" \
+  https://mojimoto.com/api/v1/<project>/types -o mojimoto.generated.ts
+```
+
 ### Resolved references
 
 `reference` / `references` fields arrive already resolved to the linked document's `data`
-(one level deep). Type them with `MojiReference`:
+(one level deep by default — see [Reference depth](#reference-depth)). Type them with `MojiReference`:
 
 ```ts
 import type { MojiReference, MojimotoDocument } from '@mojimoto/client';

@@ -1,6 +1,6 @@
 {
   "name": "@mojimoto/nuxt",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Nuxt 3 module for Mojimoto: auto-configured client, SSR composables, and global components.",
   "author": "Your Ikigai Ltd",
   "license": "MIT",

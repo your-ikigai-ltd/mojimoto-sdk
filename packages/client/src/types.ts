@@ -94,6 +94,13 @@ export interface QueryOptions {
    * Prefix with `-` for descending, e.g. `-updated_at`. Defaults to `id`.
    */
   sort?: string;
+  /**
+   * How many levels of linked entries (`reference`/`references` fields) the
+   * API inlines. Defaults to 1 (the server clamps to 1–3). Use 2 for the
+   * page → sections pattern when sections have references of their own; a
+   * link beyond the budget collapses to `{ id, type, uid }`.
+   */
+  depth?: 1 | 2 | 3;
   /** Abort the request. */
   signal?: AbortSignal;
 }
@@ -102,5 +109,7 @@ export interface QueryOptions {
 export interface FetchOptions {
   lang?: string;
   preview?: boolean;
+  /** Reference resolution depth, 1–3. See {@link QueryOptions.depth}. */
+  depth?: 1 | 2 | 3;
   signal?: AbortSignal;
 }

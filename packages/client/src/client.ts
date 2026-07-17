@@ -162,6 +162,7 @@ export function createClient(options: MojimotoClientOptions): MojimotoClient {
       page: opts.page,
       per_page: opts.perPage,
       sort: opts.sort,
+      depth: opts.depth,
       ref: (opts.preview ?? options.preview) ? 'preview' : undefined,
     });
   }
@@ -195,12 +196,20 @@ export function createClient(options: MojimotoClientOptions): MojimotoClient {
     },
 
     byUid<T extends MojimotoDocument = MojimotoDocument>(type: string, uid: string, opts: FetchOptions = {}) {
-      return client.first<T>({ type, uid, lang: opts.lang, preview: opts.preview, signal: opts.signal });
+      return client.first<T>({
+        type,
+        uid,
+        lang: opts.lang,
+        preview: opts.preview,
+        depth: opts.depth,
+        signal: opts.signal,
+      });
     },
 
     byId<T extends MojimotoDocument = MojimotoDocument>(id: number, opts: FetchOptions = {}) {
       const url = buildUrl(`documents/${id}`, {
         lang: opts.lang ?? options.lang,
+        depth: opts.depth,
         ref: (opts.preview ?? options.preview) ? 'preview' : undefined,
       });
       return request<T>(url, opts.signal);

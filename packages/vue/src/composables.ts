@@ -47,7 +47,7 @@ export function useMojiQuery<T extends MojimotoDocument = MojimotoDocument>(
 export function useMojiDocument<T extends MojimotoDocument = MojimotoDocument>(
   type: string,
   uid: string,
-  opts: Pick<QueryOptions, 'lang' | 'preview'> = {},
+  opts: Pick<QueryOptions, 'lang' | 'preview' | 'depth'> = {},
 ): AsyncState<T | null> {
   const client = useMojimotoClient();
   const data = shallowRef<T | null>();
