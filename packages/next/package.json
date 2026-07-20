@@ -1,6 +1,6 @@
 {
   "name": "@mojimoto/next",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Next.js App Router helpers for Mojimoto: cache-aware client and Draft Mode preview.",
   "author": "Your Ikigai Ltd",
   "license": "MIT",
