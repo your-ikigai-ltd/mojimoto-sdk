@@ -35,6 +35,10 @@ function buildDefaults(linkResolver?: MojiLinkResolver): MojiRichTextSerializer<
       node.oembed.html
         ? h('div', { 'data-oembed': node.oembed.embed_url, innerHTML: node.oembed.html })
         : h('template'),
+    table: ({ head, body }) =>
+      h('table', {}, [head.length ? h('thead', {}, head) : null, h('tbody', {}, body)]),
+    tableRow: ({ children }) => h('tr', {}, children),
+    tableCell: ({ node, children }) => h(node.header ? 'th' : 'td', {}, children),
     strong: ({ children }) => h('strong', {}, children),
     em: ({ children }) => h('em', {}, children),
     label: ({ node, children }) => {

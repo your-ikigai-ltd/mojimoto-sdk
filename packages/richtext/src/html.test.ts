@@ -58,3 +58,26 @@ describe('asHTML', () => {
     );
   });
 });
+
+describe('tables', () => {
+  it('renders header rows in thead and the rest in tbody', () => {
+    const html = asHTML([
+      {
+        type: 'table',
+        rows: [
+          { cells: [{ text: 'Do', spans: [], header: true }, { text: 'Do not', spans: [], header: true }] },
+          { cells: [{ text: 'Be clear', spans: [{ start: 0, end: 2, type: 'strong' }] }, { text: 'Mislead', spans: [] }] },
+        ],
+      },
+    ]);
+    expect(html).toBe(
+      '<table><thead><tr><th>Do</th><th>Do not</th></tr></thead><tbody><tr><td><strong>Be</strong> clear</td><td>Mislead</td></tr></tbody></table>',
+    );
+  });
+
+  it('flattens tables to tab-separated text', () => {
+    expect(
+      asText([{ type: 'table', rows: [{ cells: [{ text: 'a', spans: [] }, { text: 'b', spans: [] }] }] }]),
+    ).toBe('a\tb');
+  });
+});

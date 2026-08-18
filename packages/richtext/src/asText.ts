@@ -21,7 +21,14 @@ export function asText(nodes: MojiRichText | null | undefined, options: AsTextOp
   const separator = options.separator ?? '\n';
 
   return nodes
-    .map((node) => ('text' in node && typeof node.text === 'string' ? node.text : ''))
+    .map((node) => {
+      if (node.type === 'table') {
+        return (node.rows ?? [])
+          .map((row) => (row.cells ?? []).map((cell) => cell.text ?? '').join('\t'))
+          .join(separator);
+      }
+      return 'text' in node && typeof node.text === 'string' ? node.text : '';
+    })
     .filter((text) => text.length > 0)
     .join(separator);
 }

@@ -4,6 +4,9 @@ import type {
   MojiRichText,
   MojiRichTextNode,
   MojiSpan,
+  MojiTableCell,
+  MojiTableNode,
+  MojiTableRow,
   MojiTextNode,
 } from './types';
 
@@ -25,6 +28,28 @@ export interface LeafArgs<TNode> {
 
 /** Arguments for list wrappers (`<ul>` / `<ol>`), whose children are items. */
 export interface ListArgs<TChild> {
+  children: TChild[];
+  key: string;
+}
+
+/** Arguments for a table: `head` holds leading all-header rows, `body` the rest. */
+export interface TableArgs<TChild> {
+  node: MojiTableNode;
+  head: TChild[];
+  body: TChild[];
+  key: string;
+}
+
+/** Arguments for a table row, whose children are serialized cells. */
+export interface TableRowArgs<TChild> {
+  node: MojiTableRow;
+  children: TChild[];
+  key: string;
+}
+
+/** Arguments for a table cell, whose children are its inline content. */
+export interface TableCellArgs<TChild> {
+  node: MojiTableCell;
   children: TChild[];
   key: string;
 }
@@ -56,6 +81,9 @@ export interface MojiRichTextSerializer<T> {
   oListItem(args: BlockArgs<MojiTextNode, T>): T;
   image(args: LeafArgs<MojiImageNode>): T;
   embed(args: LeafArgs<MojiEmbedNode>): T;
+  table(args: TableArgs<T>): T;
+  tableRow(args: TableRowArgs<T>): T;
+  tableCell(args: TableCellArgs<T>): T;
   strong(args: BlockArgs<MojiSpan, T>): T;
   em(args: BlockArgs<MojiSpan, T>): T;
   label(args: BlockArgs<MojiSpan, T>): T;
@@ -136,6 +164,9 @@ function serializeBlock<T>(node: MojiRichTextNode, serializer: MojiRichTextSeria
   if (node.type === 'embed') {
     return serializer.embed({ node, key });
   }
+  if (node.type === 'table') {
+    return serializeTable(node, serializer, key);
+  }
 
   const children = composeText(node.text, node.spans, serializer, key);
 
@@ -147,6 +178,39 @@ function serializeBlock<T>(node: MojiRichTextNode, serializer: MojiRichTextSeria
 
   // Unknown block type: fall back to a paragraph so content is never dropped.
   return serializer.paragraph({ node, children, key });
+}
+
+/**
+ * Serialize a table: rows split into leading all-header rows (the head) and
+ * the rest (the body); each cell's text + spans compose like any text block.
+ */
+function serializeTable<T>(node: MojiTableNode, serializer: MojiRichTextSerializer<T>, key: string): T {
+  const rows = Array.isArray(node.rows) ? node.rows : [];
+  const head: T[] = [];
+  const body: T[] = [];
+  let inHead = true;
+
+  rows.forEach((row, r) => {
+    const cells = Array.isArray(row.cells) ? row.cells : [];
+    const rowKey = `${key}-r${r}`;
+    const isHeaderRow = cells.length > 0 && cells.every((cell) => cell.header === true);
+
+    if (!isHeaderRow) inHead = false;
+
+    const children = cells.map((cell, c) => {
+      const cellKey = `${rowKey}-c${c}`;
+      return serializer.tableCell({
+        node: cell,
+        children: composeText(cell.text ?? '', cell.spans, serializer, cellKey),
+        key: cellKey,
+      });
+    });
+
+    const serialized = serializer.tableRow({ node: row, children, key: rowKey });
+    (inHead && isHeaderRow ? head : body).push(serialized);
+  });
+
+  return serializer.table({ node, head, body, key });
 }
 
 /**

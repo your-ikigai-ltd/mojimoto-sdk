@@ -83,8 +83,30 @@ export interface MojiEmbedNode {
   };
 }
 
+/** A single table cell: text + inline spans, optionally a header cell. */
+export interface MojiTableCell {
+  text: string;
+  spans: MojiSpan[];
+  /** Render as `<th>` rather than `<td>`. */
+  header?: boolean;
+}
+
+/** A table row. */
+export interface MojiTableRow {
+  cells: MojiTableCell[];
+}
+
+/**
+ * A table block. Rows whose cells are all `header` cells form the `<thead>`
+ * when they lead the table; everything else renders in the `<tbody>`.
+ */
+export interface MojiTableNode {
+  type: 'table';
+  rows: MojiTableRow[];
+}
+
 /** Any single node in a rich-text document. */
-export type MojiRichTextNode = MojiTextNode | MojiImageNode | MojiEmbedNode;
+export type MojiRichTextNode = MojiTextNode | MojiImageNode | MojiEmbedNode | MojiTableNode;
 
 /** A `rich_text` field value: an ordered list of nodes. */
 export type MojiRichText = MojiRichTextNode[];

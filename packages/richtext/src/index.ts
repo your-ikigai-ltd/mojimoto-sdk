@@ -6,6 +6,9 @@ export {
   type BlockArgs,
   type LeafArgs,
   type ListArgs,
+  type TableArgs,
+  type TableRowArgs,
+  type TableCellArgs,
   type TextRunArgs,
 } from './serialize';
 export { asText, type AsTextOptions } from './asText';

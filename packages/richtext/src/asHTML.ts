@@ -69,6 +69,10 @@ export function asHTML(nodes: MojiRichText | null | undefined, options: AsHTMLOp
       return `<figure>${wrapped}</figure>`;
     },
     embed: ({ node }) => `<div data-oembed="${escapeHTML(node.oembed.embed_url ?? '')}">${node.oembed.html ?? ''}</div>`,
+    table: ({ head, body }) =>
+      `<table>${head.length ? `<thead>${head.join('')}</thead>` : ''}<tbody>${body.join('')}</tbody></table>`,
+    tableRow: ({ children }) => `<tr>${children.join('')}</tr>`,
+    tableCell: ({ node, children }) => (node.header ? `<th>${children.join('')}</th>` : `<td>${children.join('')}</td>`),
     strong: ({ children }) => `<strong>${children.join('')}</strong>`,
     em: ({ children }) => `<em>${children.join('')}</em>`,
     label: ({ node, children }) => {
@@ -77,7 +81,7 @@ export function asHTML(nodes: MojiRichText | null | undefined, options: AsHTMLOp
     },
     hyperlink: ({ node, children }) =>
       `<a ${linkAttributes(node.data as MojiLink, linkResolver)}>${children.join('')}</a>`,
-    text: ({ text }) => escapeHTML(text),
+    text: ({ text }) => escapeHTML(text).replace(/\n/g, '<br>'),
   };
 
   const serializer: MojiRichTextSerializer<string> = { ...defaults, ...components };
