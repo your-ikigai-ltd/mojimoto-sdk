@@ -20,8 +20,9 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      # Build first: packages typecheck against each other's built dist.
+      - run: pnpm build
       - run: pnpm typecheck
 
       - run: pnpm test
 
-      - run: pnpm build
