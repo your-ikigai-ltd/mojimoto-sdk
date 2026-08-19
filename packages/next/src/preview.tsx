@@ -13,7 +13,7 @@
  */
 import { type ComponentType, type ReactNode } from 'react';
 import type { MojimotoClient } from '@mojimoto/client';
-import { SliceZone, type SliceComponents } from '@mojimoto/react';
+import type { SliceComponents } from '@mojimoto/react';
 
 export interface PreviewHandlerOptions {
   /** Shared secret that must match the `secret` query param. */
@@ -149,6 +149,11 @@ export function createSlicePreviewPage<C = unknown>(options: SlicePreviewPageOpt
       return notFound();
     }
 
+    // Imported lazily: @mojimoto/react creates a React context at module load,
+    // which the server runtime a route handler runs in doesn't provide. The
+    // preview/exit-preview handlers in this same entry must stay importable
+    // there.
+    const { SliceZone } = await import('@mojimoto/react');
     const zone = <SliceZone slices={[slice]} components={components} context={context} />;
 
     return Wrapper ? <Wrapper>{zone}</Wrapper> : zone;
