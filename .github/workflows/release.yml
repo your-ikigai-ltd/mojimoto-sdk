@@ -24,7 +24,8 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          registry-url: https://registry.npmjs.org
+          # No registry-url: setup-node would write a placeholder auth token to
+          # .npmrc, which npm then sends instead of doing the OIDC exchange.
 
       # Trusted publishing needs npm >= 11.5.1; Node 22 ships an older npm.
       - run: npm install -g npm@latest
