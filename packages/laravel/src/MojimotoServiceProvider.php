@@ -3,13 +3,13 @@
 namespace Mojimoto\Laravel;
 
 use Illuminate\Contracts\Cache\Factory as CacheFactory;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Http\Client\Factory as Http;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Mojimoto\Laravel\Http\Middleware\HandlePreview;
 use Mojimoto\Laravel\Http\WebhookController;
-use Mojimoto\Laravel\RichText\RichText;
 
 class MojimotoServiceProvider extends ServiceProvider
 {
@@ -61,6 +61,6 @@ class MojimotoServiceProvider extends ServiceProvider
 
         Route::post(config('mojimoto.webhook.path', 'mojimoto/webhook'), WebhookController::class)
             ->name('mojimoto.webhook')
-            ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class]);
+            ->withoutMiddleware([ValidateCsrfToken::class]);
     }
 }
