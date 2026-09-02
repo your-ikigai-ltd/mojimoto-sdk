@@ -1,0 +1,32 @@
+name: PHP
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/laravel/**'
+      - '.github/workflows/php.yml'
+  pull_request:
+    paths:
+      - 'packages/laravel/**'
+      - '.github/workflows/php.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.3', '8.4', '8.5']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      - run: composer install --no-interaction --prefer-dist
+        working-directory: packages/laravel
+
+      - run: composer test
+        working-directory: packages/laravel

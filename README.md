@@ -17,6 +17,7 @@ Pull content from the Mojimoto delivery API with full TypeScript types, and rend
 | [`@mojimoto/nuxt`](./packages/nuxt) | Nuxt 3 module: auto-config, SSR composables, global components. | `npm i @mojimoto/nuxt` |
 | [`@mojimoto/next`](./packages/next) | Next.js App Router helpers: cache-aware client + Draft Mode. | `npm i @mojimoto/next` |
 | [`@mojimoto/cli`](./packages/cli) | CLI to download generated TypeScript types for your project. | `npx @mojimoto/cli types` |
+| [`mojimoto/laravel`](./packages/laravel) | Laravel: delivery client with caching, Blade rich text, signed webhooks, draft preview. | `composer require mojimoto/laravel` |
 
 You only need the packages for your stack — they layer cleanly:
 

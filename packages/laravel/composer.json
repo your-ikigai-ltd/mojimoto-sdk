@@ -1,0 +1,63 @@
+{
+    "name": "mojimoto/laravel",
+    "description": "Laravel integration for the Mojimoto headless CMS: delivery client, response caching, rich text rendering, signed webhooks and draft preview.",
+    "keywords": [
+        "mojimoto",
+        "headless-cms",
+        "laravel",
+        "cms",
+        "sdk"
+    ],
+    "license": "MIT",
+    "type": "library",
+    "homepage": "https://mojimoto.com",
+    "authors": [
+        {
+            "name": "Your Ikigai Ltd",
+            "homepage": "https://www.your-ikigai.co.uk"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "illuminate/cache": "^12.0|^13.0",
+        "illuminate/contracts": "^12.0|^13.0",
+        "illuminate/http": "^12.0|^13.0",
+        "illuminate/support": "^12.0|^13.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^10.0|^11.0",
+        "pestphp/pest": "^4.0|^5.0",
+        "pestphp/pest-plugin-laravel": "^4.0|^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mojimoto\\Laravel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mojimoto\\Laravel\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Mojimoto\\Laravel\\MojimotoServiceProvider"
+            ],
+            "aliases": {
+                "Mojimoto": "Mojimoto\\Laravel\\Facades\\Mojimoto"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
