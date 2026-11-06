@@ -1,5 +1,13 @@
 # @mojimoto/next
 
+## 0.1.3
+
+### Patch Changes
+
+- d9705e6: `@mojimoto/next/preview` no longer evaluates `@mojimoto/react` at module load, so `createPreviewHandler` / `createExitPreviewHandler` can be used in route handlers without a "createContext is not a function" build error. `createSlicePreviewPage` imports it on demand.
+- Updated dependencies [ef3ddf8]
+  - @mojimoto/react@0.2.1
+
 ## 0.1.2
 
 ### Patch Changes
