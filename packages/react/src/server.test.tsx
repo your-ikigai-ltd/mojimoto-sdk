@@ -10,14 +10,11 @@ describe('in React Server Components', () => {
       return { ...react, createContext: undefined, useContext: undefined };
     });
 
-    const { renderToStaticMarkup } = await import('react-dom/server');
     const { MojiRichText } = await import('./MojiRichText');
 
-    const html = renderToStaticMarkup(
-      <MojiRichText field={[{ type: 'paragraph', text: 'Rendered on the server', spans: [] }]} />,
-    );
+    const tree = MojiRichText({ field: [{ type: 'paragraph', text: 'Rendered on the server', spans: [] }] });
 
-    expect(html).toContain('Rendered on the server');
+    expect(JSON.stringify(tree)).toContain('Rendered on the server');
 
     vi.doUnmock('react');
   });
