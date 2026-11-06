@@ -4,6 +4,11 @@
   "description": "Nuxt 3 module for Mojimoto: auto-configured client, SSR composables, and global components.",
   "author": "Your Ikigai Ltd",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-ikigai-ltd/mojimoto-sdk.git",
+    "directory": "packages/nuxt"
+  },
   "type": "module",
   "keywords": [
     "mojimoto",
@@ -39,5 +44,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "homepage": "https://mojimoto.com"
 }
