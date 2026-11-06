@@ -1,6 +1,6 @@
 {
   "name": "@mojimoto/richtext",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Framework-agnostic core for rendering Mojimoto rich-text fields: types, a serializer engine, and asText/asHTML helpers.",
   "author": "Your Ikigai Ltd",
   "license": "MIT",

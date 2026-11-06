@@ -1,5 +1,14 @@
 # @mojimoto/vue
 
+## 0.3.1
+
+### Patch Changes
+
+- 5039210: Packages now declare their repository, which npm needs to verify publish provenance.
+- Updated dependencies [5039210]
+  - @mojimoto/client@0.4.1
+  - @mojimoto/richtext@0.2.1
+
 ## 0.3.0
 
 ### Minor Changes
