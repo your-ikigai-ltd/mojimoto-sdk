@@ -36,6 +36,7 @@ MOJIMOTO_TOKEN="your-read-token"
 | `endpoint` | `MOJIMOTO_ENDPOINT` | Delivery endpoint. |
 | `project` | `MOJIMOTO_PROJECT` | Project slug. |
 | `token` | `MOJIMOTO_TOKEN` | **Read** token. |
+| `environment` | `MOJIMOTO_ENVIRONMENT` | A sandbox environment's slug. Omit for the live site. |
 | `lang` | — | Default locale. |
 | `preview` | — | Request drafts by default. |
 | `components` | — | Register global components (default `true`). |

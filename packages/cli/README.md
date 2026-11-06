@@ -24,6 +24,7 @@ Each option can be passed as a flag or an environment variable:
 | `--endpoint <url>` | `MOJIMOTO_ENDPOINT` | Delivery endpoint. |
 | `--project <slug>` | `MOJIMOTO_PROJECT` | Project slug. |
 | `--token <token>` | `MOJIMOTO_TOKEN` | A **read** API token. |
+| `--environment <slug>` | `MOJIMOTO_ENVIRONMENT` | A sandbox environment's slug. Omit for the live site. |
 | `-o, --output <file>` | — | Output path (default `mojimoto.generated.ts`). |
 
 With the env vars set, the command is just:

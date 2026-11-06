@@ -79,6 +79,17 @@ describe('cli run', () => {
     expect(writes[0]!.path).toBe('/work/mojimoto.generated.ts');
   });
 
+  it('downloads a sandbox environment\'s types from its own URL', async () => {
+    const fetch = okFetch();
+    const { opts } = io({
+      fetch,
+      env: { MOJIMOTO_ENDPOINT: 'https://cms.test/api/v1', MOJIMOTO_PROJECT: 'demo', MOJIMOTO_TOKEN: 'secret' },
+    });
+
+    expect(await run(['types', '--environment', 'v2-redesign'], opts)).toBe(0);
+    expect(fetch.mock.calls[0]![0]).toBe('https://cms.test/api/v1/demo/env/v2-redesign/types');
+  });
+
   it('surfaces HTTP errors', async () => {
     const fetch = vi.fn().mockResolvedValue(new Response('forbidden', { status: 403, statusText: 'Forbidden' }));
     const { errors, opts } = io({ fetch });

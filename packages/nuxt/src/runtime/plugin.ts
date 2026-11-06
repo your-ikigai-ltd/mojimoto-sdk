@@ -12,6 +12,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   const settings = config.public.mojimoto as {
     endpoint: string;
     project: string;
+    environment?: string;
     token: string;
     lang?: string;
     preview?: boolean;
@@ -23,6 +24,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   const client = createClient({
     endpoint: settings.endpoint,
     project: settings.project,
+    environment: settings.environment || undefined,
     token: settings.token,
     lang: settings.lang || undefined,
     preview,

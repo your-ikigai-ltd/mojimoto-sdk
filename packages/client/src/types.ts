@@ -48,6 +48,12 @@ export interface MojimotoClientOptions {
   endpoint: string;
   /** Project slug (the path segment after the endpoint). */
   project: string;
+  /**
+   * A sandbox environment's slug, to read it instead of the live site.
+   * Omit it (or pass `"live"`) for the live environment. Needs a token
+   * created for that environment.
+   */
+  environment?: string;
   /** Project-scoped API token. Needs the `read` ability (`preview` for drafts). */
   token: string;
   /** Request draft content (`?ref=preview`). Requires a preview-capable token. */

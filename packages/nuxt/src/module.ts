@@ -6,6 +6,8 @@ export interface ModuleOptions {
   endpoint?: string;
   /** Project slug. Falls back to `MOJIMOTO_PROJECT`. */
   project?: string;
+  /** A sandbox environment's slug. Falls back to `MOJIMOTO_ENVIRONMENT`; omit for the live site. */
+  environment?: string;
   /**
    * Read-only delivery token. Falls back to `MOJIMOTO_TOKEN`.
    * Stored in **public** runtime config (it ships to the browser, like a
@@ -38,12 +40,14 @@ const module: NuxtModule<ModuleOptions> = defineNuxtModule<ModuleOptions>({
     const publicConfig = (nuxt.options.runtimeConfig.public.mojimoto ??= {}) as {
       endpoint?: string;
       project?: string;
+      environment?: string;
       token?: string;
       lang?: string;
       preview?: boolean;
     };
     publicConfig.endpoint = options.endpoint ?? process.env.MOJIMOTO_ENDPOINT ?? publicConfig.endpoint ?? '';
     publicConfig.project = options.project ?? process.env.MOJIMOTO_PROJECT ?? publicConfig.project ?? '';
+    publicConfig.environment = options.environment ?? process.env.MOJIMOTO_ENVIRONMENT ?? publicConfig.environment ?? '';
     publicConfig.token = options.token ?? process.env.MOJIMOTO_TOKEN ?? publicConfig.token ?? '';
     publicConfig.lang = options.lang ?? publicConfig.lang ?? '';
     publicConfig.preview = options.preview ?? publicConfig.preview ?? false;

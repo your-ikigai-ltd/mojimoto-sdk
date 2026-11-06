@@ -11,6 +11,17 @@ export interface MojimotoWebhookPayload<T extends MojimotoDocument = MojimotoDoc
   document: T;
 }
 
+/**
+ * Sent with `event: "environment.promoted"` when a sandbox environment is made
+ * live. It carries no document - the whole live site changed, so rebuild it.
+ */
+export interface MojimotoPromotionWebhookPayload {
+  event: 'environment.promoted';
+  project: string;
+  environment: { slug: string; name: string };
+  previous_environment: { slug: string; name: string };
+}
+
 export interface VerifyWebhookOptions {
   /** The raw request body, exactly as received (do not re-serialize). */
   body: string;

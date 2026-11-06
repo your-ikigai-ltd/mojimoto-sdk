@@ -15,6 +15,7 @@ Options (types):
   --endpoint <url>      Delivery endpoint        (env: MOJIMOTO_ENDPOINT)
   --project <slug>      Project slug             (env: MOJIMOTO_PROJECT)
   --token <token>       Read API token           (env: MOJIMOTO_TOKEN)
+  --environment <slug>  Sandbox environment      (env: MOJIMOTO_ENVIRONMENT, default: live)
   -o, --output <file>   Output file              (default: mojimoto.generated.ts)
 
 Options (add-preview):
@@ -81,6 +82,7 @@ export async function run(argv: string[], io: RunIO = {}): Promise<number> {
       endpoint: { type: 'string' },
       project: { type: 'string' },
       token: { type: 'string' },
+      environment: { type: 'string' },
       output: { type: 'string', short: 'o' },
       'app-dir': { type: 'string' },
       'client-import': { type: 'string' },
@@ -115,6 +117,7 @@ export async function run(argv: string[], io: RunIO = {}): Promise<number> {
   const endpoint = values.endpoint ?? env.MOJIMOTO_ENDPOINT;
   const project = values.project ?? env.MOJIMOTO_PROJECT;
   const token = values.token ?? env.MOJIMOTO_TOKEN;
+  const environment = values.environment ?? env.MOJIMOTO_ENVIRONMENT;
   const output = values.output ?? 'mojimoto.generated.ts';
 
   const missing = [
@@ -128,7 +131,9 @@ export async function run(argv: string[], io: RunIO = {}): Promise<number> {
     return 1;
   }
 
-  const url = `${endpoint!.replace(/\/+$/, '')}/${project}/types`;
+  const isSandbox = Boolean(environment) && environment !== 'live';
+  const projectPath = isSandbox ? `${project}/env/${encodeURIComponent(environment!)}` : project;
+  const url = `${endpoint!.replace(/\/+$/, '')}/${projectPath}/types`;
 
   let response: Response;
   try {

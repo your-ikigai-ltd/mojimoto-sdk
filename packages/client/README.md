@@ -26,6 +26,7 @@ const cms = createClient({
 | `endpoint` | `string` | **Required.** Base delivery endpoint (no trailing project slug). |
 | `project` | `string` | **Required.** Project slug. |
 | `token` | `string` | **Required.** Read token (`preview` ability for drafts). |
+| `environment` | `string` | A sandbox environment's slug. Omit (or `"live"`) for the live site. Needs a token created for that environment. |
 | `lang` | `string` | Default locale applied when a call omits one. |
 | `preview` | `boolean` | Request drafts (`?ref=preview`) by default. |
 | `fetch` | `typeof fetch` | Custom fetch (e.g. for Node < 18 or instrumentation). |

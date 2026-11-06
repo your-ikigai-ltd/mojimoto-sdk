@@ -149,3 +149,14 @@ it('retries transient failures when configured', function () {
 
     Http::assertSentCount(2);
 });
+
+it('reads a sandbox environment from its own URL', function () {
+    config()->set('mojimoto.environment', 'v2-redesign');
+    app()->forgetScopedInstances();
+
+    Http::fake(['cms.test/*' => Http::response(listBody([homeDoc()]))]);
+
+    Mojimoto::byUid('page', 'home');
+
+    Http::assertSent(fn ($request) => str_starts_with($request->url(), 'https://cms.test/api/v1/demo/env/v2-redesign/documents?'));
+});

@@ -34,6 +34,7 @@ class MojimotoServiceProvider extends ServiceProvider
                 userAgent: (string) ($config['user_agent'] ?? 'mojimoto-laravel/1.0'),
                 cache: $cache,
                 ttl: $cacheEnabled ? (int) ($config['cache']['ttl'] ?? 0) : 0,
+                environment: $config['environment'] ?? null,
             );
         });
     }

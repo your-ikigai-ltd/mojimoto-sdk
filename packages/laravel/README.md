@@ -16,6 +16,12 @@ MOJIMOTO_WEBHOOK_SECRET=...
 MOJIMOTO_PREVIEW_SECRET=some-long-random-string
 ```
 
+To build against a sandbox environment (a copy of the content you can rework without touching the live site), add its slug and use a token created for it:
+
+```dotenv
+MOJIMOTO_ENVIRONMENT=v2-redesign
+```
+
 Publish the config if you want to change caching, the webhook path or the preview cookie:
 
 ```bash

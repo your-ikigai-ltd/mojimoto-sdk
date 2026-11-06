@@ -46,6 +46,24 @@ describe('createClient', () => {
     expect((init as RequestInit).headers).toMatchObject({ Authorization: 'Bearer secret-token' });
   });
 
+  it('reads a sandbox environment from its own URL', async () => {
+    const fetch = vi.fn().mockResolvedValue(jsonResponse(page([], 1, 1)));
+    const cms = createClient({ ...base, fetch, environment: 'v2-redesign' });
+
+    await cms.query({ type: 'page' });
+
+    expect(fetch.mock.calls[0]![0]).toBe('https://cms.test/api/v1/demo/env/v2-redesign/documents?type=page');
+  });
+
+  it('keeps the plain URL for the live environment', async () => {
+    const fetch = vi.fn().mockResolvedValue(jsonResponse(page([], 1, 1)));
+    const cms = createClient({ ...base, fetch, environment: 'live' });
+
+    await cms.query({ type: 'page' });
+
+    expect(fetch.mock.calls[0]![0]).toBe('https://cms.test/api/v1/demo/documents?type=page');
+  });
+
   it('adds ref=preview when preview is enabled', async () => {
     const fetch = vi.fn().mockResolvedValue(jsonResponse(page([], 1, 1)));
     const cms = createClient({ ...base, fetch, preview: true });

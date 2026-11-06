@@ -54,6 +54,10 @@ export function createClient(options: MojimotoClientOptions): MojimotoClient {
   }
 
   const base = options.endpoint.replace(/\/+$/, '');
+  const isSandbox = Boolean(options.environment) && options.environment !== 'live';
+  const projectPath = isSandbox
+    ? `${options.project}/env/${encodeURIComponent(options.environment!)}`
+    : options.project;
 
   const retry =
     typeof options.retry === 'number' ? { attempts: options.retry } : (options.retry ?? {});
@@ -79,7 +83,7 @@ export function createClient(options: MojimotoClientOptions): MojimotoClient {
   const isRetryableStatus = (status: number) => status === 429 || status >= 500;
 
   function buildUrl(path: string, query: Record<string, string | number | boolean | undefined>): string {
-    const url = new URL(`${base}/${options.project}/${path}`);
+    const url = new URL(`${base}/${projectPath}/${path}`);
     for (const [key, value] of Object.entries(query)) {
       if (value !== undefined && value !== '') {
         url.searchParams.set(key, String(value));

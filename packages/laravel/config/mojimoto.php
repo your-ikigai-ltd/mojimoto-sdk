@@ -6,6 +6,9 @@ return [
 
     'project' => env('MOJIMOTO_PROJECT'),
 
+    // A sandbox environment's slug. Leave empty for the live site.
+    'environment' => env('MOJIMOTO_ENVIRONMENT'),
+
     'token' => env('MOJIMOTO_TOKEN'),
 
     'lang' => env('MOJIMOTO_LANG', 'en-gb'),

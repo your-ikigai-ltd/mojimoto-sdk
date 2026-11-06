@@ -30,6 +30,7 @@ class Client
         private readonly string $userAgent = 'mojimoto-laravel/1.0',
         private readonly ?Cache $cache = null,
         private readonly int $ttl = 0,
+        private readonly ?string $environment = null,
     ) {}
 
     public function query(array $options = []): ListResponse
@@ -149,11 +150,18 @@ class Client
 
     private function url(string $path, array $params): string
     {
-        $base = rtrim($this->endpoint, '/')."/{$this->project}/{$path}";
+        $base = rtrim($this->endpoint, '/')."/{$this->projectPath()}/{$path}";
 
         $query = array_filter($params, fn ($value) => $value !== null && $value !== '');
 
         return $query === [] ? $base : $base.'?'.http_build_query($query);
+    }
+
+    private function projectPath(): string
+    {
+        $isSandbox = filled($this->environment) && $this->environment !== 'live';
+
+        return $isSandbox ? "{$this->project}/env/".rawurlencode($this->environment) : $this->project;
     }
 
     private function request(string $url): array
