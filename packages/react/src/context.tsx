@@ -1,4 +1,5 @@
-import { createContext, useContext, type ReactNode } from 'react';
+import * as React from 'react';
+import type { ReactNode } from 'react';
 import type { MojimotoClient } from '@mojimoto/client';
 import type { MojiLinkResolver, MojiRichTextComponents } from '@mojimoto/richtext';
 
@@ -11,7 +12,8 @@ export interface MojimotoContextValue {
   richTextComponents?: MojiRichTextComponents<ReactNode>;
 }
 
-const MojimotoContext = createContext<MojimotoContextValue>({});
+// Server Components get a React build without context, so components fall back to their props there.
+const MojimotoContext = React.createContext ? React.createContext<MojimotoContextValue>({}) : null;
 
 export interface MojimotoProviderProps extends MojimotoContextValue {
   children: ReactNode;
@@ -29,11 +31,15 @@ export interface MojimotoProviderProps extends MojimotoContextValue {
  * ```
  */
 export function MojimotoProvider({ children, ...value }: MojimotoProviderProps) {
+  if (!MojimotoContext) {
+    throw new Error('MojimotoProvider needs a client component. Add "use client" to the file that renders it.');
+  }
+
   return <MojimotoContext.Provider value={value}>{children}</MojimotoContext.Provider>;
 }
 
 export function useMojimotoContext(): MojimotoContextValue {
-  return useContext(MojimotoContext);
+  return MojimotoContext ? React.useContext(MojimotoContext) : {};
 }
 
 /** Returns the client from context, throwing a helpful error if absent. */
