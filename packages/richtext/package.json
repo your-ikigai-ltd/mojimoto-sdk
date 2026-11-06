@@ -4,6 +4,11 @@
   "description": "Framework-agnostic core for rendering Mojimoto rich-text fields: types, a serializer engine, and asText/asHTML helpers.",
   "author": "Your Ikigai Ltd",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-ikigai-ltd/mojimoto-sdk.git",
+    "directory": "packages/richtext"
+  },
   "type": "module",
   "sideEffects": false,
   "keywords": [
@@ -33,5 +38,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "homepage": "https://mojimoto.com"
 }

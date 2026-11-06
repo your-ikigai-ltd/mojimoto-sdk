@@ -4,6 +4,11 @@
   "description": "Next.js App Router helpers for Mojimoto: cache-aware client and Draft Mode preview.",
   "author": "Your Ikigai Ltd",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-ikigai-ltd/mojimoto-sdk.git",
+    "directory": "packages/next"
+  },
   "type": "module",
   "sideEffects": false,
   "keywords": [
@@ -54,5 +59,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "homepage": "https://mojimoto.com"
 }

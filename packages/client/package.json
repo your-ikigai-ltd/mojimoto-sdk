@@ -4,6 +4,11 @@
   "description": "Typed client for the Mojimoto content delivery API.",
   "author": "Your Ikigai Ltd",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-ikigai-ltd/mojimoto-sdk.git",
+    "directory": "packages/client"
+  },
   "type": "module",
   "sideEffects": false,
   "keywords": [
@@ -36,5 +41,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "homepage": "https://mojimoto.com"
 }
