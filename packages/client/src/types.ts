@@ -32,6 +32,19 @@ export interface MojimotoDocument<T extends string = string, D = Record<string, 
   data: D;
 }
 
+/**
+ * One block from a blocks field: a section stored inside its entry. Same
+ * shape as a document's type and data, so slice zones render either.
+ */
+export interface MojimotoBlock<T extends string = string, D = Record<string, unknown>> {
+  id: string;
+  type: T;
+  data: D;
+}
+
+/** Anything a slice zone can render: a referenced entry or an inline block. */
+export type MojimotoSlice = MojimotoDocument | MojimotoBlock;
+
 /** The paginated envelope returned by the list endpoint. */
 export interface MojimotoListResponse<T extends MojimotoDocument = MojimotoDocument> {
   results: T[];

@@ -29,9 +29,9 @@ This site reads its content from Mojimoto, a headless CMS. Project: \`${project}
 
 ## Before you change anything
 
-1. Read the content model first: \`reference/content-model.md\`, or call the MCP tool \`list-content-types\`.
+1. Read the content model first: \`reference/content-model.md\`, or the MCP resource \`mojimoto://content-model\`.
 2. Prefer editing drafts. Publish only when the user asked for it.
-3. Never delete published entries or remove fields without the user saying so. Field removal is explicit (\`remove-field\`) and can break the live site.
+3. Never delete published entries or remove fields without the user saying so. Field removal is explicit (\`remove-field-tool\`) and can break the live site.
 4. Every write is logged against the token that made it, so the user can see what you changed.
 
 ## Reading content (delivery API)
@@ -77,19 +77,21 @@ Regenerate types after a model change: \`npx @mojimoto/cli types -o mojimoto.gen
 
 ## Writing content
 
-Use the MCP server (\`mojimoto\`) when it is connected. Its tools: \`list-content-types\`, \`list-documents\`, \`create-document\`, \`update-document\`, \`publish-document\`, \`unpublish-document\`, \`delete-document\`, \`upload-asset\`, \`create-content-type\`, \`update-content-type\`, \`add-field\`, \`update-field\`, \`remove-field\`.
+Use the MCP server (\`mojimoto\`) when it is connected. Read the \`mojimoto://content-model\` resource first. Its tools: \`list-content-types-tool\`, \`list-documents-tool\`, \`create-document-tool\`, \`update-document-tool\`, \`publish-document-tool\`, \`unpublish-document-tool\`, \`delete-document-tool\`, \`upload-asset-tool\`, \`create-content-type-tool\`, \`update-content-type-tool\`, \`add-field-tool\`, \`update-field-tool\`, \`remove-field-tool\`. Your token may not have all of them: a token can be limited to certain operations and content types.
 
 Without MCP, the write API mirrors them under \`${endpoint}/${project}/manage\`, e.g. \`POST /manage/documents\` with \`{ "type", "uid", "data" }\`, then \`POST /manage/documents/{id}/publish\`.
 
 Field values:
 - Rich text accepts HTML (\`<p>\`, \`<h2>\`, \`<strong>\`, \`<a>\`, lists).
-- Media fields take \`{ "asset_id": <id> }\` from \`upload-asset\`.
+- Media fields take \`{ "asset_id": <id> }\` from \`upload-asset-tool\`.
 - A reference is a document id; a references field is an ordered list of ids.
 - \`page\` types need a \`uid\` (the URL slug). \`single\` types have one entry. \`component\` types are sections other entries reference.
 
 ## Modelling
 
-Model a page as a \`page\` type whose sections live in a references field pointing at \`component\` types. Delivery inlines them in order (\`depth=2\` resolves their references too). Don't store page structure in a JSON field.
+Give a page its sections with a \`blocks\` field: \`config.blocks\` maps each block type to \`{ label, fields }\`, and the value is an ordered list of \`{ "type": "hero", "data": { ... } }\` stored inside the entry. Block fields can be symbol, text, rich_text, number, boolean, date, select, media, location or json. Delivered blocks are \`{ id, type, data }\`, so \`<SliceZone>\` from \`@mojimoto/react\` renders them.
+
+Use a references field pointing at \`component\` entries only for content shared between pages. Don't store page structure in a JSON field.
 
 See \`reference/content-model.md\` for this project's types.
 `;
@@ -99,7 +101,7 @@ export function contentModelMarkdown(options: AgentDocsOptions): string {
   if (!options.contentModel) {
     return `# Content model
 
-Not downloaded yet. Run \`npx @mojimoto/cli init --token <read token>\` again, or call the MCP tool \`list-content-types\`.
+Not downloaded yet. Run \`npx @mojimoto/cli init --token <read token>\` again, or read the MCP resource \`mojimoto://content-model\`.
 `;
   }
 

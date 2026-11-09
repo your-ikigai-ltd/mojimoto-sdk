@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { MojimotoDocument } from '@mojimoto/client';
-import { SliceZone, type SliceComponents } from './SliceZone';
+import type { MojimotoBlock, MojimotoDocument } from '@mojimoto/client';
+import { SliceZone, type BlockComponents, type SliceComponents } from './SliceZone';
 
 function doc(id: number, type: string, data: Record<string, unknown> = {}): MojimotoDocument {
   return { id, uid: `${type}-${id}`, type, lang: 'en-gb', status: 'published', published_at: null, updated_at: '', data };
@@ -66,5 +66,23 @@ describe('<SliceZone>', () => {
       <SliceZone slices={[doc(1, 'hero')]} components={ctxComponents} context={{ theme: 'dark' }} />,
     );
     expect(getByTestId('ctx').textContent).toBe('dark');
+  });
+});
+
+describe('<SliceZone> with blocks', () => {
+  it('renders inline blocks from a blocks field', () => {
+    const blocks: MojimotoBlock[] = [
+      { id: 'a1', type: 'hero', data: { heading: 'Welcome' } },
+      { id: 'b2', type: 'quote', data: { text: 'Lovely' } },
+    ];
+
+    const blockComponents: BlockComponents = {
+      hero: ({ slice }) => <h1>{String(slice.data.heading)}</h1>,
+      quote: ({ slice }) => <blockquote>{String(slice.data.text)}</blockquote>,
+    };
+
+    const { container } = render(<SliceZone slices={blocks} components={blockComponents} />);
+
+    expect(container.innerHTML).toBe('<h1>Welcome</h1><blockquote>Lovely</blockquote>');
   });
 });
