@@ -1,6 +1,6 @@
 {
   "name": "@mojimoto/client",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Typed client for the Mojimoto content delivery API.",
   "author": "Your Ikigai Ltd",
   "license": "MIT",

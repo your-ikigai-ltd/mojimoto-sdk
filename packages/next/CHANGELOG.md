@@ -1,5 +1,13 @@
 # @mojimoto/next
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [7aa814b]
+  - @mojimoto/client@0.5.0
+  - @mojimoto/react@0.3.0
+
 ## 0.1.3
 
 ### Patch Changes
