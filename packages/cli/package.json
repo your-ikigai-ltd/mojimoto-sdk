@@ -1,7 +1,7 @@
 {
   "name": "@mojimoto/cli",
   "version": "0.1.1",
-  "description": "Command-line tool for the Mojimoto headless CMS — download generated TypeScript types for your project.",
+  "description": "Command-line tool for the Mojimoto headless CMS: set up coding agents and download generated TypeScript types.",
   "author": "Your Ikigai Ltd",
   "license": "MIT",
   "repository": {
