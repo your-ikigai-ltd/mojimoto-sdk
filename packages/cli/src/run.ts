@@ -1,13 +1,15 @@
 import { existsSync } from 'node:fs';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
+import { init } from './init';
 
 export const VERSION = '0.1.0';
 
 export const HELP = `mojimoto — CLI for the Mojimoto headless CMS
 
 Usage:
+  mojimoto init [options]        Set up Claude Code, Cursor or Codex to work with your project
   mojimoto types [options]       Download generated TypeScript types for your project
   mojimoto add-preview [options] Scaffold the Next.js slice-preview route
 
@@ -16,6 +18,13 @@ Options (types):
   --project <slug>      Project slug             (env: MOJIMOTO_PROJECT)
   --token <token>       Read API token           (env: MOJIMOTO_TOKEN)
   -o, --output <file>   Output file              (default: mojimoto.generated.ts)
+
+Options (init):
+  --project <slug>      Project slug             (env: MOJIMOTO_PROJECT)
+  --token <token>       Read token, to include your content model (env: MOJIMOTO_TOKEN)
+  --agent <names>       claude, cursor, codex or all (default: all)
+  --endpoint <url>      Delivery endpoint        (default: https://mojimoto.com/api/v1)
+  --force               Overwrite existing skill and rule files
 
 Options (add-preview):
   --app-dir <path>      Next.js app directory    (default: app)
@@ -28,6 +37,9 @@ Common:
   -v, --version         Show the CLI version
 
 Examples:
+  # Teach Claude Code about your project, with its content model:
+  npx @mojimoto/cli init --agent claude --project my-site --token mjmt_…
+
   MOJIMOTO_TOKEN=… mojimoto types \\
     --endpoint https://mojimoto.com/api/v1 --project decentenergy
 
@@ -43,6 +55,8 @@ export interface RunIO {
   fetch?: typeof fetch;
   /** Defaults to writing the file to disk (creating parent dirs); injectable for tests. */
   write?: (path: string, contents: string) => Promise<void>;
+  /** Defaults to reading the file from disk, or null when missing; injectable for tests. */
+  read?: (path: string) => Promise<string | null>;
   /** Defaults to checking the filesystem; injectable for tests. */
   exists?: (path: string) => boolean | Promise<boolean>;
   /** Defaults to `console.log`. */
@@ -69,6 +83,7 @@ export async function run(argv: string[], io: RunIO = {}): Promise<number> {
       await writeFile(path, contents, 'utf8');
     });
   const exists = io.exists ?? ((path) => existsSync(path));
+  const read = io.read ?? (async (path) => (existsSync(path) ? readFile(path, 'utf8') : null));
   const out = io.out ?? ((m) => console.log(m));
   const err = io.err ?? ((m) => console.error(m));
   const env = io.env ?? process.env;
@@ -85,6 +100,7 @@ export async function run(argv: string[], io: RunIO = {}): Promise<number> {
       'app-dir': { type: 'string' },
       'client-import': { type: 'string' },
       'components-import': { type: 'string' },
+      agent: { type: 'string' },
       force: { type: 'boolean' },
       help: { type: 'boolean', short: 'h' },
       version: { type: 'boolean', short: 'v' },
@@ -101,6 +117,10 @@ export async function run(argv: string[], io: RunIO = {}): Promise<number> {
   if (values.help || !command) {
     out(HELP);
     return values.help ? 0 : 1;
+  }
+
+  if (command === 'init') {
+    return init(values, { fetch: doFetch, write, read, out, err, env, cwd });
   }
 
   if (command === 'add-preview') {

@@ -15,6 +15,24 @@ npx @mojimoto/cli types \
 
 This writes `mojimoto.generated.ts` into the current directory.
 
+## Set up your coding agent
+
+```bash
+npx @mojimoto/cli init --project my-site --token mjmt_your_read_token
+```
+
+Writes everything Claude Code, Cursor and Codex need to work with your project:
+
+| File | For |
+| --- | --- |
+| `.claude/skills/mojimoto/SKILL.md` | Claude Code: how to read, write and model content in Mojimoto |
+| `.claude/skills/mojimoto/reference/content-model.md` | Your project's content model, downloaded with the read token |
+| `CLAUDE.md`, `AGENTS.md` | A short note pointing the agent at the skill (added between markers, so re-running replaces it) |
+| `.mcp.json`, `.cursor/mcp.json` | The project's MCP server, added alongside any servers you already have |
+| `.cursor/rules/mojimoto.mdc` | Cursor rule with the same guidance |
+
+Pick agents with `--agent claude,cursor` (default: all). The MCP configs read `MOJIMOTO_WRITE_TOKEN` from your environment, so no token is written to your repo. Re-running keeps your edits to the skill unless you pass `--force`.
+
 ## Configuration
 
 Each option can be passed as a flag or an environment variable:
