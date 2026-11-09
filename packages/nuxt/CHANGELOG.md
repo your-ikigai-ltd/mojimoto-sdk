@@ -1,5 +1,13 @@
 # @mojimoto/nuxt
 
+## 0.2.3
+
+### Patch Changes
+
+- Updated dependencies [7aa814b]
+  - @mojimoto/client@0.5.0
+  - @mojimoto/vue@0.3.2
+
 ## 0.2.2
 
 ### Patch Changes

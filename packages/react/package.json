@@ -1,6 +1,6 @@
 {
   "name": "@mojimoto/react",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "React components and hooks for rendering Mojimoto CMS content (rich text, images, links).",
   "author": "Your Ikigai Ltd",
   "license": "MIT",
