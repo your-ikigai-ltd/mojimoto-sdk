@@ -14,6 +14,7 @@ export {
   type SliceZoneProps,
   type SliceComponent,
   type SliceComponents,
+  type BlockComponents,
   type SliceComponentProps,
 } from './SliceZone';
 export { useMojiQuery, useMojiDocument, type AsyncState } from './hooks';
@@ -25,4 +26,4 @@ export type {
   MojiLink as MojiLinkValue,
   MojiLinkResolver,
 } from '@mojimoto/richtext';
-export type { MojimotoDocument, MojimotoClient } from '@mojimoto/client';
+export type { MojimotoDocument, MojimotoBlock, MojimotoSlice, MojimotoClient } from '@mojimoto/client';

@@ -8,6 +8,8 @@ export {
 export type {
   MojimotoClientOptions,
   MojimotoDocument,
+  MojimotoBlock,
+  MojimotoSlice,
   MojimotoListResponse,
   QueryOptions,
   RetryOptions,

@@ -58,7 +58,7 @@ async function downloadContentModel(options: AgentDocsOptions, token: string, io
     });
 
     if (!response.ok) {
-      io.err(`• Could not download the content model (${response.status}). The skill will tell the agent to use list-content-types instead.`);
+      io.err(`• Could not download the content model (${response.status}). The skill will point the agent at the MCP content-model resource instead.`);
 
       return undefined;
     }
