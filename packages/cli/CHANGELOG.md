@@ -1,5 +1,11 @@
 # @mojimoto/cli
 
+## 0.2.1
+
+### Patch Changes
+
+- e8155e9: `mojimoto init` points agents at Mojimoto's llms.txt from the skill, the Cursor rule and the CLAUDE.md/AGENTS.md note, for everything the skill doesn't cover.
+
 ## 0.2.0
 
 ### Minor Changes
