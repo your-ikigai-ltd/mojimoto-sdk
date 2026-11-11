@@ -60,6 +60,19 @@ describe('init', () => {
     expect(fs.io.fetch).not.toHaveBeenCalled();
   });
 
+  it('points every agent at llms.txt', async () => {
+    const fs = memoryFs();
+
+    await run(['init', '--project', 'my-site'], fs.io);
+
+    const llmsTxt = 'https://mojimoto.com/llms.txt';
+
+    expect(fs.files.get('/site/.claude/skills/mojimoto/SKILL.md')).toContain(llmsTxt);
+    expect(fs.files.get('/site/.cursor/rules/mojimoto.mdc')).toContain(llmsTxt);
+    expect(fs.files.get('/site/AGENTS.md')).toContain(llmsTxt);
+    expect(fs.files.get('/site/CLAUDE.md')).toContain(llmsTxt);
+  });
+
   it('includes the content model when given a read token', async () => {
     const fs = memoryFs();
 

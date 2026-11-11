@@ -15,6 +15,10 @@ export function mcpUrl({ endpoint, project }: AgentDocsOptions): string {
   return `${siteRoot(endpoint)}/mcp/${project}`;
 }
 
+export function llmsTxtUrl(endpoint: string): string {
+  return `${siteRoot(endpoint)}/llms.txt`;
+}
+
 export function skillMarkdown(options: AgentDocsOptions): string {
   const { endpoint, project } = options;
 
@@ -33,6 +37,7 @@ This site reads its content from Mojimoto, a headless CMS. Project: \`${project}
 2. Prefer editing drafts. Publish only when the user asked for it.
 3. Never delete published entries or remove fields without the user saying so. Field removal is explicit (\`remove-field-tool\`) and can break the live site.
 4. Every write is logged against the token that made it, so the user can see what you changed.
+5. For anything this skill doesn't cover (every field type's write format, the full Write API, assets, migrating from Prismic), read \`${llmsTxtUrl(endpoint)}\`. It is Mojimoto's documentation for agents and is kept in step with the API.
 
 ## Reading content (delivery API)
 
@@ -119,7 +124,7 @@ export function projectNote(options: AgentDocsOptions): string {
   return `${MARKER_START}
 ## Content (Mojimoto)
 
-This site's content comes from the Mojimoto headless CMS, project \`${options.project}\`. Read and write it with the \`mojimoto\` skill (\`.claude/skills/mojimoto/SKILL.md\`) or the \`mojimoto\` MCP server. Read the content model before changing it, keep changes as drafts unless asked to publish, and never delete published content or remove fields without asking.
+This site's content comes from the Mojimoto headless CMS, project \`${options.project}\`. Read and write it with the \`mojimoto\` skill (\`.claude/skills/mojimoto/SKILL.md\`) or the \`mojimoto\` MCP server. Read the content model before changing it, keep changes as drafts unless asked to publish, and never delete published content or remove fields without asking. The full API reference for agents is at ${llmsTxtUrl(options.endpoint)}.
 ${MARKER_END}`;
 }
 
