@@ -28,6 +28,7 @@ const cms = createClient({
 | `token` | `string` | **Required.** Read token (`preview` ability for drafts). |
 | `lang` | `string` | Default locale applied when a call omits one. |
 | `preview` | `boolean` | Request drafts (`?ref=preview`) by default. |
+| `release` | `string` | With `preview`, the slug of a release to preview on its own. See [Previewing a release](#previewing-a-release). |
 | `fetch` | `typeof fetch` | Custom fetch (e.g. for Node < 18 or instrumentation). |
 | `headers` | `Record<string,string>` | Extra headers merged into every request. |
 | `retry` | `number \| RetryOptions` | Retry transient failures (429/5xx, network) with exponential backoff. Off by default. |
@@ -56,7 +57,7 @@ const home = await cms.byUid('marketing_page', 'home');
 const doc = await cms.byId(42);
 ```
 
-Every method accepts per-call `lang`, `preview`, and an `AbortSignal`:
+Every method accepts per-call `lang`, `preview`, `release`, and an `AbortSignal`:
 
 ```ts
 const controller = new AbortController();
@@ -83,6 +84,22 @@ const home = await cms.byUid('page', 'home', { depth: 2 });
 // Beyond the depth budget a link collapses to { id, type, uid }.
 ```
 
+## Previewing a release
+
+A release is a group of entries that goes live together, such as a rewritten site. Plain `preview` returns every draft in the project. Add `release` to see the site as it will be when that one release launches: its entries come from their drafts, and everything else as it is live.
+
+```ts
+const staging = createClient({
+  endpoint: 'https://mojimoto.com/api/v1',
+  project: 'acme',
+  token: process.env.MOJIMOTO_PREVIEW_TOKEN!,
+  preview: true,
+  release: 'website-v2',
+});
+```
+
+`release` only does anything while previewing, so it is safe to leave set on a client that turns `preview` on and off.
+
 ## Verifying webhooks
 
 Mojimoto signs each webhook POST with `X-Mojimoto-Signature`. Verify it before trusting the body:
@@ -98,6 +115,16 @@ const ok = await verifyWebhookSignature({
 if (!ok) return new Response('bad signature', { status: 401 });
 
 const payload: MojimotoWebhookPayload = JSON.parse(bodyText);
+```
+
+A release sends one event for everything it changes, such as `release.launched`, with the entries listed in `documents` in place of a single `document`. Check which you have before reading either:
+
+```ts
+import { isReleaseWebhook, type MojimotoReleaseWebhookPayload, type MojimotoWebhookPayload } from '@mojimoto/client';
+
+const payload: MojimotoWebhookPayload | MojimotoReleaseWebhookPayload = JSON.parse(bodyText);
+
+const changed = isReleaseWebhook(payload) ? payload.documents : [payload.document];
 ```
 
 ## Typed documents

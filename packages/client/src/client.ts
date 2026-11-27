@@ -154,6 +154,16 @@ export function createClient(options: MojimotoClientOptions): MojimotoClient {
     return sleep(explicitMs ?? backoff, signal);
   }
 
+  // A release only narrows a preview, so it is left off every other request.
+  function previewQuery(opts: { preview?: boolean; release?: string }) {
+    const isPreview = opts.preview ?? options.preview ?? false;
+
+    return {
+      ref: isPreview ? 'preview' : undefined,
+      release: isPreview ? (opts.release ?? options.release) : undefined,
+    };
+  }
+
   function listUrl(opts: QueryOptions): string {
     return buildUrl('documents', {
       type: opts.type,
@@ -163,7 +173,7 @@ export function createClient(options: MojimotoClientOptions): MojimotoClient {
       per_page: opts.perPage,
       sort: opts.sort,
       depth: opts.depth,
-      ref: (opts.preview ?? options.preview) ? 'preview' : undefined,
+      ...previewQuery(opts),
     });
   }
 
@@ -201,6 +211,7 @@ export function createClient(options: MojimotoClientOptions): MojimotoClient {
         uid,
         lang: opts.lang,
         preview: opts.preview,
+        release: opts.release,
         depth: opts.depth,
         signal: opts.signal,
       });
@@ -210,7 +221,7 @@ export function createClient(options: MojimotoClientOptions): MojimotoClient {
       const url = buildUrl(`documents/${id}`, {
         lang: opts.lang ?? options.lang,
         depth: opts.depth,
-        ref: (opts.preview ?? options.preview) ? 'preview' : undefined,
+        ...previewQuery(opts),
       });
       return request<T>(url, opts.signal);
     },

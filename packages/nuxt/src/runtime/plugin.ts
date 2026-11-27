@@ -15,6 +15,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     token: string;
     lang?: string;
     preview?: boolean;
+    release?: string;
   };
 
   const previewCookie = useCookie('mojimoto_preview');
@@ -26,6 +27,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     token: settings.token,
     lang: settings.lang || undefined,
     preview,
+    release: settings.release || undefined,
   });
 
   nuxtApp.vueApp.use(createMojimoto({ client }));

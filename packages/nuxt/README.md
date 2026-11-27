@@ -38,6 +38,7 @@ MOJIMOTO_TOKEN="your-read-token"
 | `token` | `MOJIMOTO_TOKEN` | **Read** token. |
 | `lang` | — | Default locale. |
 | `preview` | — | Request drafts by default. |
+| `release` | `MOJIMOTO_RELEASE` | While previewing, the slug of a release to preview on its own. |
 | `components` | — | Register global components (default `true`). |
 
 > **Token visibility:** the read token is placed in **public** runtime config, so it's available

@@ -2,6 +2,8 @@ export { createClient, type MojimotoClient } from './client';
 export { MojimotoError } from './error';
 export {
   verifyWebhookSignature,
+  isReleaseWebhook,
+  type MojimotoReleaseWebhookPayload,
   type MojimotoWebhookPayload,
   type VerifyWebhookOptions,
 } from './webhook';

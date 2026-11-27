@@ -54,6 +54,8 @@ export interface MojimotoListResponse<T extends MojimotoDocument = MojimotoDocum
   total_pages: number;
   lang: string;
   ref: string;
+  /** The release a preview was narrowed to, when one was asked for. */
+  release?: string;
 }
 
 export interface MojimotoClientOptions {
@@ -65,6 +67,12 @@ export interface MojimotoClientOptions {
   token: string;
   /** Request draft content (`?ref=preview`). Requires a preview-capable token. */
   preview?: boolean;
+  /**
+   * With `preview`, the slug of a release to preview on its own: its entries
+   * come from their drafts and everything else as it is live. Ignored when
+   * `preview` is off.
+   */
+  release?: string;
   /** Default locale, applied when a call omits one. */
   lang?: string;
   /** Custom `fetch` implementation (e.g. a framework-instrumented one). */
@@ -102,6 +110,8 @@ export interface QueryOptions {
   perPage?: number;
   /** Request drafts for this call. */
   preview?: boolean;
+  /** Preview one release for this call. See {@link MojimotoClientOptions.release}. */
+  release?: string;
   /**
    * Sort by a document column: `id`, `uid`, `created_at`, or `updated_at`.
    * Prefix with `-` for descending, e.g. `-updated_at`. Defaults to `id`.
@@ -122,6 +132,8 @@ export interface QueryOptions {
 export interface FetchOptions {
   lang?: string;
   preview?: boolean;
+  /** Preview one release for this call. See {@link MojimotoClientOptions.release}. */
+  release?: string;
   /** Reference resolution depth, 1–3. See {@link QueryOptions.depth}. */
   depth?: 1 | 2 | 3;
   signal?: AbortSignal;
