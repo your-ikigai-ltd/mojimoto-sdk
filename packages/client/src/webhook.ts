@@ -11,6 +11,29 @@ export interface MojimotoWebhookPayload<T extends MojimotoDocument = MojimotoDoc
   document: T;
 }
 
+/**
+ * The body of a release event: `release.launched`, `release.rolled_back`,
+ * `release.retired_content` or `release.restored_content`. A release changes
+ * many entries at once, so it sends one event listing them in `documents`, in
+ * place of one {@link MojimotoWebhookPayload} for each.
+ */
+export interface MojimotoReleaseWebhookPayload {
+  event: 'release.launched' | 'release.rolled_back' | 'release.retired_content' | 'release.restored_content';
+  project: string;
+  release: { slug: string; name: string };
+  /** The entries whose published content changed. `uid` is left out for an entry that has none. */
+  documents: Array<{ id: number; type: string; uid?: string }>;
+  /** The fields that were retired or restored, each as `content_type.field`. */
+  fields?: string[];
+}
+
+/** Whether a webhook body is a release event, with `documents`, and not a single entry's. */
+export function isReleaseWebhook(
+  payload: MojimotoWebhookPayload | MojimotoReleaseWebhookPayload,
+): payload is MojimotoReleaseWebhookPayload {
+  return payload.event.startsWith('release.');
+}
+
 export interface VerifyWebhookOptions {
   /** The raw request body, exactly as received (do not re-serialize). */
   body: string;

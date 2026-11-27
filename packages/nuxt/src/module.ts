@@ -16,6 +16,12 @@ export interface ModuleOptions {
   lang?: string;
   /** Request draft content by default (needs a preview-capable token). */
   preview?: boolean;
+  /**
+   * While previewing, the slug of a release to preview on its own: its entries
+   * come from their drafts and everything else as it is live. Falls back to
+   * `MOJIMOTO_RELEASE`.
+   */
+  release?: string;
   /** Auto-register `<MojiRichText>` etc. as global components. Default `true`. */
   components?: boolean;
 }
@@ -41,12 +47,14 @@ const module: NuxtModule<ModuleOptions> = defineNuxtModule<ModuleOptions>({
       token?: string;
       lang?: string;
       preview?: boolean;
+      release?: string;
     };
     publicConfig.endpoint = options.endpoint ?? process.env.MOJIMOTO_ENDPOINT ?? publicConfig.endpoint ?? '';
     publicConfig.project = options.project ?? process.env.MOJIMOTO_PROJECT ?? publicConfig.project ?? '';
     publicConfig.token = options.token ?? process.env.MOJIMOTO_TOKEN ?? publicConfig.token ?? '';
     publicConfig.lang = options.lang ?? publicConfig.lang ?? '';
     publicConfig.preview = options.preview ?? publicConfig.preview ?? false;
+    publicConfig.release = options.release ?? process.env.MOJIMOTO_RELEASE ?? publicConfig.release ?? '';
 
     // The SDK packages publish ESM/CJS; transpile so Nuxt handles them uniformly.
     nuxt.options.build.transpile.push('@mojimoto/vue', '@mojimoto/client', '@mojimoto/richtext');

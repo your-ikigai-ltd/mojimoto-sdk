@@ -53,6 +53,26 @@ describe('createClient', () => {
     expect(fetch.mock.calls[0]![0]).toContain('ref=preview');
   });
 
+  it('narrows a preview to one release, and leaves release off when not previewing', async () => {
+    const fetch = vi.fn().mockImplementation(() => Promise.resolve(jsonResponse(page([], 1, 1))));
+    const cms = createClient({ ...base, fetch, preview: true, release: 'website-v2' });
+
+    await cms.query({ type: 'page' });
+    await cms.byId(7);
+    await cms.byUid('page', 'home', { release: 'contact-v2' });
+    await cms.query({ type: 'page', preview: false });
+
+    const [list, byId, byUid, live] = fetch.mock.calls.map(([url]) => new URL(url as string)) as [URL, URL, URL, URL];
+
+    expect(list.searchParams.get('ref')).toBe('preview');
+    expect(list.searchParams.get('release')).toBe('website-v2');
+    expect(byId.pathname).toBe('/api/v1/demo/documents/7');
+    expect(byId.searchParams.get('release')).toBe('website-v2');
+    expect(byUid.searchParams.get('release')).toBe('contact-v2');
+    expect(live.searchParams.has('ref')).toBe(false);
+    expect(live.searchParams.has('release')).toBe(false);
+  });
+
   it('byUid returns the first result or null', async () => {
     const doc = { id: 1, uid: 'home', type: 'page', lang: 'en-gb', status: 'published', published_at: null, updated_at: '', data: {} };
     const fetch = vi.fn().mockResolvedValue(jsonResponse(page([doc], 1, 1)));
